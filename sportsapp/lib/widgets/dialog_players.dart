@@ -6,9 +6,9 @@ import 'package:sportsapp/data/cubits/playres_cubit/playres_state.dart';
 import 'package:sportsapp/data/models/playrs_model.dart';
 
 class CustomDialogWidget extends StatelessWidget {
-  
+  final Result? playerData;
 
-  const CustomDialogWidget({super.key,});
+  const CustomDialogWidget({super.key,this.playerData});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,43 @@ class CustomDialogWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
-          DialogWidget(),
+          BlocProvider(
+      create: (context) => PlayersCubit(),
+      child: BlocBuilder<PlayersCubit, PlayersState>(
+        builder: (context, state) {
+          return Container(
+            width: 300,
+            padding: EdgeInsets.symmetric(
+              horizontal: 32,
+              vertical: 16,
+            ),
+            margin: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+             color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+            Text(playerData?.playerName ?? "", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            //if (playerData?.playerImage != null)
+            Image.network(playerData?.playerImage ??""), // Assuming player.playerImage is a URL
+            SizedBox(height: 10),
+            Text('Number: ${playerData?.playerNumber ?? ''}'),
+            Text('Country: ${playerData?.playerCountry ?? ''}'),
+            Text('Position: ${playerData?.playerType ?? ''}'),
+            Text('Age: ${playerData?.playerAge ?? ''}'),
+            Text('Yellow Cards: ${playerData?.playerYellowCards ?? ''}'),
+            Text('Red Cards: ${playerData?.playerRedCards ?? ''}'),
+            Text('Goals: ${playerData?.playerGoals ?? ''}'),
+            Text('Assists: ${playerData?.playerAssists ?? ''}'),
+],
+            ),
+          );
+        },
+      ),
+    ),
           Positioned(
             top: 0,
             right: 0,
@@ -34,46 +70,11 @@ class CustomDialogWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 color: Color.fromARGB(255, 170, 169, 169),
               ),
+            
             ),
+        
           ),
         ],
-      ),
-    );
-  }
-}
-
-class DialogWidget extends StatelessWidget {
-  const DialogWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    //final Result? playerData;
-    //late PlayersCubit _playersCubit;
-    return BlocProvider(
-      create: (context) => PlayersCubit(),
-      child: BlocBuilder<PlayersCubit, PlayersState>(
-        builder: (context, state) {
-          return Container(
-            width: 300,
-            padding: EdgeInsets.symmetric(
-              horizontal: 32,
-              vertical: 16,
-            ),
-            margin: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              //mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("")
-                ],
-            ),
-          );
-        },
       ),
     );
   }

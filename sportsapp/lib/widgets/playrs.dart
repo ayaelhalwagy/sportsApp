@@ -4,73 +4,87 @@ import 'package:sportsapp/widgets/dialog_players.dart';
 
 class PlayrsCard extends StatelessWidget {
   final Result player;
-  const PlayrsCard({super.key,
-  required this.player
-  });
+
+  const PlayrsCard({required this.player, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: (){
+    // Fallback image asset path
+    const String fallbackImagePath = 'assets/images/default_player_image.png';
+
+    return GestureDetector(
+      onTap: () {
         showDialog(
           context: context,
-           builder: (context)=> const CustomDialogWidget(),
-           
-           );
+          builder: (context) => CustomDialogWidget(playerData: player),
+        );
       },
       child: Stack(
         children: [
+          // Top Container with Player Image or Placeholder Icon
           Container(
-            height: 320,
-            // width: 320,
-            margin: EdgeInsets.only(left: 20, right: 20),
+            height: 350,
+            margin: EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Color(0xff5C5470),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(player.playerImage ?? "" ),
-                )),
+              borderRadius: BorderRadius.circular(30),
+              color: Color(0xff5C5470),
+              image: player.playerImage != null && player.playerImage!.isNotEmpty
+                  ? DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(player.playerImage!),
+                    )
+                  : null, // No image if player.playerImage is null or empty
+            ),
+            child: player.playerImage != null && player.playerImage!.isNotEmpty
+                ? null
+                : Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 100,
+                      color: Colors.white,
+                    ),
+                  ), // Placeholder icon
           ),
-          //to control a place of containers in stack
-      
+          // Bottom Container with Player Information
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 120,
               width: 300,
-              //margin: EdgeInsets.only(left: 30, right: 30, bottom: 30),
               margin: EdgeInsets.all(30),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                //color: Colors.white,
+                color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 5.0,
-                    offset: Offset(0, 5),
+                    color: Colors.black.withOpacity(.6),
+                    blurRadius: 20.0,
+                    offset: Offset(-5, -5),
                   ),
                 ],
               ),
               child: Container(
-                //padding: EdgeInsets.only(top: 15,left: 15,right: 15),
                 padding: EdgeInsets.all(20),
                 child: Center(
                   child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(player.playerName??"",
-                          style: TextStyle(
-                              color: Color(0xff352F44),
-                              fontWeight: FontWeight.bold,fontSize: 22)),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Text(
-                        player.playerType??"",
+                        player.playerName?.trim() ?? "",
                         style: TextStyle(
-                            color: Color(0xff352F44),
-                            fontWeight: FontWeight.bold,fontSize: 22),
+                          color: Color(0xff352F44),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        player.playerType ?? "",
+                        style: TextStyle(
+                          color: Color(0xff352F44),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ],
                   ),

@@ -5,37 +5,22 @@ import 'package:sportsapp/data/cubits/playres_cubit/playres_state.dart';
 import 'package:sportsapp/widgets/playrs.dart';
 import 'package:sportsapp/widgets/search_playrs.dart';
 
-class Playerscreen extends StatefulWidget {
-  const Playerscreen({Key? key}) ;
-
-  @override
-  State<Playerscreen> createState() => _PlayerscreenState();
-}
-
-class _PlayerscreenState extends State<Playerscreen> {
-  late PlayersCubit _playersCubit;
-
-  @override
-  void initState() {
- super.initState();
-    _playersCubit = PlayersCubit();
-    _playersCubit.players(); // Start loading players when the screen initializes
- }
+class PlayerScreen extends StatelessWidget {
+  const PlayerScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.watch<PlayersCubit>(); // Use watch for state changes
+
     return Scaffold(
       backgroundColor: Color(0xff352F44),
-      body: Column(
-        children: [
-          // First part
-          SearchPlayrs(),
-
-          // Second part - players
-          BlocProvider(
-            create: (context) => _playersCubit,
-            child: BlocBuilder<PlayersCubit, PlayersState>(
-              
+      body: SingleChildScrollView( // Wrap with SingleChildScrollView
+        child: Column(
+          children: [
+            SearchPlayers(
+              onChanged: (query) => cubit.filterPlayers(query),
+            ),
+            BlocBuilder<PlayersCubit, PlayersState>(
               builder: (context, state) {
                 if (state is PlayersLoading) {
                   return Center(
@@ -43,7 +28,7 @@ class _PlayerscreenState extends State<Playerscreen> {
                   );
                 } else if (state is PlayersSuccess) {
                   return Container(
-                    height: 420,
+                    height: MediaQuery.of(context).size.height - 320, // Adjusted height
                     child: PageView.builder(
                       itemCount: state.responceModel.result!.length,
                       itemBuilder: (context, index) => PlayrsCard(
@@ -58,11 +43,9 @@ class _PlayerscreenState extends State<Playerscreen> {
                 }
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
-  
 }
