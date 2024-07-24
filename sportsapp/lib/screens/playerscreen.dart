@@ -12,38 +12,44 @@ class PlayerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.watch<PlayersCubit>(); // Use watch for state changes
 
-    return Scaffold(
-      backgroundColor: Color(0xff352F44),
-      body: SingleChildScrollView( // Wrap with SingleChildScrollView
-        child: Column(
-          children: [
-            SearchPlayers(
-              onChanged: (query) => cubit.filterPlayers(query),
-            ),
-            BlocBuilder<PlayersCubit, PlayersState>(
-              builder: (context, state) {
-                if (state is PlayersLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is PlayersSuccess) {
-                  return Container(
-                    height: MediaQuery.of(context).size.height - 350, // Adjusted height
-                    child: PageView.builder(
-                      itemCount: state.responceModel.result!.length,
-                      itemBuilder: (context, index) => PlayrsCard(
-                        player: state.responceModel.result![index],
+    return GestureDetector( // Wrap with GestureDetector
+      onTap: () {
+        // Close the keyboard and unfocus the text field when tapping outside
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xff352F44),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SearchPlayers(
+                onChanged: (query) => cubit.filterPlayers(query),
+              ),
+              BlocBuilder<PlayersCubit, PlayersState>(
+                builder: (context, state) {
+                  if (state is PlayersLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is PlayersSuccess) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height - 350,
+                      child: PageView.builder(
+                        itemCount: state.responceModel.result!.length,
+                        itemBuilder: (context, index) => PlayrsCard(
+                          player: state.responceModel.result![index],
+                        ),
                       ),
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Text('Something went wrong'),
-                  );
-                }
-              },
-            ),
-          ],
+                    );
+                  } else {
+                    return Center(
+                      child: Text('Something went wrong'),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
