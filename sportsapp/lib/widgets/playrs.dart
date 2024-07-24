@@ -9,9 +9,6 @@ class PlayrsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Fallback image asset path
-    const String fallbackImagePath = 'assets/images/default_player_image.png';
-
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -21,31 +18,41 @@ class PlayrsCard extends StatelessWidget {
       },
       child: Stack(
         children: [
-          // Top Container with Player Image or Placeholder Icon
           Container(
-            height: 350,
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            height: 320,
+            margin: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: Color(0xff5C5470),
-              image: player.playerImage != null && player.playerImage!.isNotEmpty
-                  ? DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(player.playerImage!),
-                    )
-                  : null, // No image if player.playerImage is null or empty
             ),
-            child: player.playerImage != null && player.playerImage!.isNotEmpty
-                ? null
-                : Center(
-                    child: Icon(
-                      Icons.person,
-                      size: 100,
-                      color: Colors.white,
-                    ),
-                  ), // Placeholder icon
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: player.playerImage != null && player.playerImage!.isNotEmpty
+                        ? Image.network(
+                            player.playerImage!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              print('Error loading image: $error');
+                              return Center(
+                                child: Icon(Icons.image_not_supported, size: 60, color: Colors.white),
+                              );
+                            },
+                          )
+                        : Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 60,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          // Bottom Container with Player Information
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -67,24 +74,21 @@ class PlayrsCard extends StatelessWidget {
                 padding: EdgeInsets.all(20),
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        player.playerName?.trim() ?? "",
-                        style: TextStyle(
-                          color: Color(0xff352F44),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                        ),
+                      Text(player.playerName ?? "",
+                          style: TextStyle(
+                              color: Color(0xff352F44),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22)),
+                      SizedBox(
+                        height: 10,
                       ),
-                      SizedBox(height: 5),
                       Text(
                         player.playerType ?? "",
                         style: TextStyle(
-                          color: Color(0xff352F44),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                            color: Color(0xff352F44),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22),
                       ),
                     ],
                   ),

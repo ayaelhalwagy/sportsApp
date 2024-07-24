@@ -28,7 +28,7 @@ class PlayerScreen extends StatelessWidget {
                   );
                 } else if (state is PlayersSuccess) {
                   return Container(
-                    height: MediaQuery.of(context).size.height - 320, // Adjusted height
+                    height: MediaQuery.of(context).size.height - 350, // Adjusted height
                     child: PageView.builder(
                       itemCount: state.responceModel.result!.length,
                       itemBuilder: (context, index) => PlayrsCard(

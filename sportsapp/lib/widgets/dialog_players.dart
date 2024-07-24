@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportsapp/data/cubits/playres_cubit/players_cubit.dart';
 import 'package:sportsapp/data/cubits/playres_cubit/playres_state.dart';
@@ -8,7 +7,7 @@ import 'package:sportsapp/data/models/playrs_model.dart';
 class CustomDialogWidget extends StatelessWidget {
   final Result? playerData;
 
-  const CustomDialogWidget({super.key,this.playerData});
+  const CustomDialogWidget({required this.playerData});
 
   @override
   Widget build(BuildContext context) {
@@ -17,42 +16,60 @@ class CustomDialogWidget extends StatelessWidget {
       child: Stack(
         children: [
           BlocProvider(
-      create: (context) => PlayersCubit(),
-      child: BlocBuilder<PlayersCubit, PlayersState>(
-        builder: (context, state) {
-          return Container(
-            width: 300,
-            padding: EdgeInsets.symmetric(
-              horizontal: 32,
-              vertical: 16,
+            create: (context) => PlayersCubit(),
+            child: BlocBuilder<PlayersCubit, PlayersState>(
+              builder: (context, state) {
+                return Container(
+                  width: 300,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  margin: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(playerData?.playerName ?? "", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      // Display placeholder if player image is null or empty
+                      if (playerData?.playerImage != null && playerData!.playerImage!.isNotEmpty)
+                        Image.network(
+                          playerData!.playerImage!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print('Error loading image: $error');
+                            return Center(
+                              child: Icon(Icons.image_not_supported, size: 60, color: Colors.grey),
+                            );
+                          },
+                        ),
+                      if (playerData?.playerImage == null || playerData!.playerImage!.isEmpty)
+                        Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 60,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      SizedBox(height: 10),
+                      Text('Number: ${playerData?.playerNumber ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Country: ${playerData?.playerCountry ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Position: ${playerData?.playerType ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Age: ${playerData?.playerAge ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Yellow Cards: ${playerData?.playerYellowCards ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Red Cards: ${playerData?.playerRedCards ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Goals: ${playerData?.playerGoals ?? ''}',style: TextStyle(fontSize: 18,)),
+                      Text('Assists: ${playerData?.playerAssists ?? ''}',style: TextStyle(fontSize: 18,)),
+                    ],
+                  ),
+                );
+              },
             ),
-            margin: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-             color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-            Text(playerData?.playerName ?? "", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            //if (playerData?.playerImage != null)
-            Image.network(playerData?.playerImage ??""), // Assuming player.playerImage is a URL
-            SizedBox(height: 10),
-            Text('Number: ${playerData?.playerNumber ?? ''}'),
-            Text('Country: ${playerData?.playerCountry ?? ''}'),
-            Text('Position: ${playerData?.playerType ?? ''}'),
-            Text('Age: ${playerData?.playerAge ?? ''}'),
-            Text('Yellow Cards: ${playerData?.playerYellowCards ?? ''}'),
-            Text('Red Cards: ${playerData?.playerRedCards ?? ''}'),
-            Text('Goals: ${playerData?.playerGoals ?? ''}'),
-            Text('Assists: ${playerData?.playerAssists ?? ''}'),
-],
-            ),
-          );
-        },
-      ),
-    ),
+          ),
           Positioned(
             top: 0,
             right: 0,
@@ -70,9 +87,7 @@ class CustomDialogWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 color: Color.fromARGB(255, 170, 169, 169),
               ),
-            
             ),
-        
           ),
         ],
       ),
