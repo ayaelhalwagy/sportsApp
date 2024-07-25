@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sportsapp/data/cubits/playres_cubit/players_cubit.dart';
 import 'package:sportsapp/data/cubits/playres_cubit/playres_state.dart';
 import 'package:sportsapp/data/models/playrs_model.dart';
@@ -13,9 +14,9 @@ class CustomDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-          // Dismiss the keyboard
-          FocusScope.of(context).unfocus();
-        },
+        // Dismiss the keyboard
+        FocusScope.of(context).unfocus();
+      },
       child: Dialog(
         backgroundColor: Colors.transparent,
         child: Stack(
@@ -38,21 +39,25 @@ class CustomDialogWidget extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(playerData?.playerName ?? "", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        Text(playerData?.playerName ?? "",
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10),
-                        // Display placeholder if player image is null or empty
-                        if (playerData?.playerImage != null && playerData!.playerImage!.isNotEmpty)
+                        if (playerData?.playerImage != null &&
+                            playerData!.playerImage!.isNotEmpty)
                           Image.network(
                             playerData!.playerImage!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               print('Error loading image: $error');
                               return Center(
-                                child: Icon(Icons.image_not_supported, size: 60, color: Colors.grey),
+                                child: Icon(Icons.image_not_supported,
+                                    size: 60, color: Colors.grey),
                               );
                             },
                           ),
-                        if (playerData?.playerImage == null || playerData!.playerImage!.isEmpty)
+                        if (playerData?.playerImage == null ||
+                            playerData!.playerImage!.isEmpty)
                           Center(
                             child: Icon(
                               Icons.image_not_supported,
@@ -61,14 +66,27 @@ class CustomDialogWidget extends StatelessWidget {
                             ),
                           ),
                         SizedBox(height: 10),
-                        Text('Number: ${playerData?.playerNumber ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Country: ${playerData?.playerCountry ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Position: ${playerData?.playerType ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Age: ${playerData?.playerAge ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Yellow Cards: ${playerData?.playerYellowCards ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Red Cards: ${playerData?.playerRedCards ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Goals: ${playerData?.playerGoals ?? ''}',style: TextStyle(fontSize: 18,)),
-                        Text('Assists: ${playerData?.playerAssists ?? ''}',style: TextStyle(fontSize: 18,)),
+                        Text('Number: ${playerData?.playerNumber ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text('Country: ${playerData?.playerCountry ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text('Position: ${playerData?.playerType ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text('Age: ${playerData?.playerAge ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text(
+                            'Yellow Cards: ${playerData?.playerYellowCards ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text(
+                            'Red Cards: ${playerData?.playerRedCards ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text('Goals: ${playerData?.playerGoals ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+                        Text('Assists: ${playerData?.playerAssists ?? ''}',
+                            style: TextStyle(fontSize: 18)),
+
+                        SizedBox(height: 10),
+                        _shareTextButton(context), // Pass context here
                       ],
                     ),
                   );
@@ -100,4 +118,21 @@ class CustomDialogWidget extends StatelessWidget {
       ),
     );
   }
+
+  Widget _shareTextButton(BuildContext context) {
+  return IconButton(
+    onPressed: () async {
+      await Share.share(
+        'Player Name: ${playerData?.playerName ?? ''} Club: ${playerData?.teamName ?? ''}',
+      );
+    },
+    color: Colors.grey,
+    icon: Icon(
+      Icons.share,
+      size: 40, // Adjust the size as needed
+    ),
+  );
+}
+
+
 }

@@ -13,7 +13,7 @@ class SearchPlayers extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       child: Container(
-        margin: EdgeInsets.only(top: 80, bottom: 40),
+        margin: EdgeInsets.only(top: 80, bottom: 60),
         padding: EdgeInsets.only(left: 20, right: 20),
         child: Row(
           children: [
