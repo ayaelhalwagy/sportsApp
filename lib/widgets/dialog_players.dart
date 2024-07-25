@@ -119,17 +119,24 @@ class CustomDialogWidget extends StatelessWidget {
     );
   }
 
-  Widget _shareTextButton(BuildContext context) {
+ Widget _shareTextButton(BuildContext context) {
   return IconButton(
     onPressed: () {
-       Share.share(
-        'Player Name: ${playerData?.playerName ?? ''} Club: ${playerData?.teamName ?? ''}',
+      String playerName = playerData?.playerName ?? '';
+      String teamName = playerData?.teamName ?? '';
+
+      // Share the data
+      Share.share(
+        'Player Name: $playerName Club: $teamName',
       );
+
+      // Print the data to the console
+      print('Player Name: $playerName , Club: $teamName');
     },
     color: Colors.grey,
     icon: Icon(
       Icons.share,
-      size: 40, 
+      size: 40,
     ),
   );
 }
