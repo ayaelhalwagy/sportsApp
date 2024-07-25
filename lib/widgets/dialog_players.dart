@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:share/share.dart';
 import 'package:sportsapp/data/cubits/playres_cubit/players_cubit.dart';
 import 'package:sportsapp/data/cubits/playres_cubit/playres_state.dart';
 import 'package:sportsapp/data/models/playrs_model.dart';
@@ -121,15 +121,15 @@ class CustomDialogWidget extends StatelessWidget {
 
   Widget _shareTextButton(BuildContext context) {
   return IconButton(
-    onPressed: () async {
-      await Share.share(
+    onPressed: () {
+       Share.share(
         'Player Name: ${playerData?.playerName ?? ''} Club: ${playerData?.teamName ?? ''}',
       );
     },
     color: Colors.grey,
     icon: Icon(
       Icons.share,
-      size: 40, // Adjust the size as needed
+      size: 40, 
     ),
   );
 }
